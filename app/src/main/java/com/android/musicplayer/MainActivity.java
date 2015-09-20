@@ -51,7 +51,25 @@ public class MainActivity extends AppCompatActivity {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.song1);
         seekbar=(SeekBar)findViewById(R.id.seekBar);
-        seekbar.setClickable(false);
+        //seekbar.setClickable(false);
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 0;
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.seekTo(seekBar.getProgress());
+            }
+        });
+
+
         b2.setEnabled(false);
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
