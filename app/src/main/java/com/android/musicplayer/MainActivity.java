@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView tx1,tx2,tx3;
 
     public static int oneTimeOnly = 0;
+    private static int currentSong = 1;
+    static MediaPlayer.OnCompletionListener onCompletionListener;
+
+    int music_numbers[] = { R.raw.song1, R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5 };
+    int image_numbers[] = { R.drawable.rhyme1, R.drawable.rhyme1, R.drawable.rhyme2, R.drawable.rhyme3, R.drawable.rhyme4, R.drawable.rhyme5, R.drawable.rhyme6 };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,14 +55,18 @@ public class MainActivity extends AppCompatActivity {
         tx3=(TextView)findViewById(R.id.textView4);
         tx3.setText("Song.mp3");
 
+        iv = (ImageView) findViewById(R.id.imageView);
+        iv.setImageResource(R.drawable.rhyme1);
+
         mediaPlayer = MediaPlayer.create(this, R.raw.song1);
+        currentSong = 1;
         seekbar=(SeekBar)findViewById(R.id.seekBar);
         //seekbar.setClickable(false);
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 0;
 
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
             }
 
             @Override
@@ -72,14 +82,17 @@ public class MainActivity extends AppCompatActivity {
 
         b2.setEnabled(false);
 
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        onCompletionListener = new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 mp.stop();
-                mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.song2);
-                playSong();
+                if ((currentSong + 1) < 6) {
+                    play_file(currentSong + 1);
+                    playSong();
+                }
             }
-        });
+        };
+        mediaPlayer.setOnCompletionListener(onCompletionListener);
 
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,15 +114,10 @@ public class MainActivity extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int temp = (int)startTime;
-
-                if((temp+forwardTime)<=finalTime){
-                    startTime = startTime + forwardTime;
-                    mediaPlayer.seekTo((int) startTime);
-                    Toast.makeText(getApplicationContext(),"You have Jumped forward 25 seconds",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"Cannot jump forward 25 seconds",Toast.LENGTH_SHORT).show();
+                mediaPlayer.stop();
+                if ((currentSong + 1) < 7) {
+                    play_file(currentSong + 1);
+                    playSong();
                 }
             }
         });
@@ -117,15 +125,10 @@ public class MainActivity extends AppCompatActivity {
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int temp = (int)startTime;
-
-                if((temp-backwardTime)>0){
-                    startTime = startTime - backwardTime;
-                    mediaPlayer.seekTo((int) startTime);
-                    Toast.makeText(getApplicationContext(),"You have Jumped backward 25 seconds",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"Cannot jump backward 25 seconds",Toast.LENGTH_SHORT).show();
+                mediaPlayer.stop();
+                if ((currentSong - 1) > 0) {
+                    play_file(currentSong - 1);
+                    playSong();
                 }
             }
         });
@@ -153,10 +156,8 @@ public class MainActivity extends AppCompatActivity {
         finalTime = mediaPlayer.getDuration();
         startTime = mediaPlayer.getCurrentPosition();
 
-        if (oneTimeOnly == 0) {
-            seekbar.setMax((int) finalTime);
-            oneTimeOnly = 1;
-        }
+        // Improve this logic so that we dont need to set it everytime
+        seekbar.setMax((int) finalTime);
         tx2.setText(String.format("%d min, %d sec",
                         TimeUnit.MILLISECONDS.toMinutes((long) finalTime),
                         TimeUnit.MILLISECONDS.toSeconds((long) finalTime) -
@@ -195,5 +196,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void play_file(int files) {
+        currentSong = files;
+        switch (files) {
+            case 1:
+                mediaPlayer = MediaPlayer.create(this, music_numbers[1]);
+                iv.setImageResource(R.drawable.rhyme1);
+                break;
+            case 2:
+                mediaPlayer = MediaPlayer.create(this, music_numbers[2]);
+                iv.setImageResource(R.drawable.rhyme2);
+                break;
+            case 3:
+                mediaPlayer = MediaPlayer.create(this, music_numbers[3]);
+                iv.setImageResource(R.drawable.rhyme3);
+                break;
+            case 4:
+                mediaPlayer = MediaPlayer.create(this, music_numbers[4]);
+                iv.setImageResource(R.drawable.rhyme4);
+                break;
+            case 5:
+                mediaPlayer = MediaPlayer.create(this, music_numbers[5]);
+                iv.setImageResource(R.drawable.rhyme5);
+                break;
+            case 6:
+                mediaPlayer = MediaPlayer.create(this, music_numbers[6]);
+                iv.setImageResource(R.drawable.rhyme6);
+                break;
+        }
+        mediaPlayer.setOnCompletionListener(onCompletionListener);
     }
 }
