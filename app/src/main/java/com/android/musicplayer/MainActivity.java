@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private static int currentSong = 1;
     static MediaPlayer.OnCompletionListener onCompletionListener;
 
-    int music_numbers[] = { R.raw.song1, R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5 };
-    int image_numbers[] = { R.drawable.rhyme1, R.drawable.rhyme1, R.drawable.rhyme2, R.drawable.rhyme3, R.drawable.rhyme4, R.drawable.rhyme5, R.drawable.rhyme6 };
+    int music_numbers[] = { R.raw.song1, R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5, R.raw.song6, R.raw.song7, R.raw.song8, R.raw.song9, R.raw.song10,R.raw.song11, R.raw.song12, R.raw.song13, R.raw.song14, R.raw.song15 };
+    int image_numbers[] = { R.drawable.rhyme1, R.drawable.rhyme1, R.drawable.rhyme2, R.drawable.rhyme3, R.drawable.rhyme4, R.drawable.rhyme5, R.drawable.rhyme6, R.drawable.rhyme7, R.drawable.rhyme8, R.drawable.rhyme9, R.drawable.rhyme10, R.drawable.rhyme11, R.drawable.rhyme12, R.drawable.rhyme12, R.drawable.rhyme14, R.drawable.rhyme15  };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +115,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mediaPlayer.stop();
-                if ((currentSong + 1) < 7) {
+                if ((currentSong + 1) < 16) {
                     play_file(currentSong + 1);
-                    playSong();
+                } else if((currentSong + 1) == 16) {
+                    play_file(1);
                 }
+                playSong();
             }
         });
 
@@ -129,7 +131,10 @@ public class MainActivity extends AppCompatActivity {
                 if ((currentSong - 1) > 0) {
                     play_file(currentSong - 1);
                     playSong();
+                } else if((currentSong - 1) == 0) {
+                    play_file(16);
                 }
+                playSong();
             }
         });
     }
@@ -198,34 +203,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void play_file(int files) {
-        currentSong = files;
-        switch (files) {
-            case 1:
-                mediaPlayer = MediaPlayer.create(this, music_numbers[1]);
-                iv.setImageResource(R.drawable.rhyme1);
-                break;
-            case 2:
-                mediaPlayer = MediaPlayer.create(this, music_numbers[2]);
-                iv.setImageResource(R.drawable.rhyme2);
-                break;
-            case 3:
-                mediaPlayer = MediaPlayer.create(this, music_numbers[3]);
-                iv.setImageResource(R.drawable.rhyme3);
-                break;
-            case 4:
-                mediaPlayer = MediaPlayer.create(this, music_numbers[4]);
-                iv.setImageResource(R.drawable.rhyme4);
-                break;
-            case 5:
-                mediaPlayer = MediaPlayer.create(this, music_numbers[5]);
-                iv.setImageResource(R.drawable.rhyme5);
-                break;
-            case 6:
-                mediaPlayer = MediaPlayer.create(this, music_numbers[6]);
-                iv.setImageResource(R.drawable.rhyme6);
-                break;
-        }
+    void play_file(int index) {
+        currentSong = index;
+        mediaPlayer = MediaPlayer.create(this, music_numbers[index]);
+        iv.setImageResource(image_numbers[index]);
         mediaPlayer.setOnCompletionListener(onCompletionListener);
     }
 }
